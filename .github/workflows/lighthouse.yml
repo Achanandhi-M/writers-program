@@ -2,8 +2,8 @@ name: Lighthouse Audit for Static Site
 
 on:
   pull_request:
-        branches:
-          - '**'
+    branches:
+      - '**'
 
 jobs:
   lighthouse:
@@ -25,15 +25,6 @@ jobs:
           serve . -l 3001 &
           sleep 5
 
-      - name: Run Lighthouse for PR branch
-        id: lighthouse_pr
-        uses: foo-software/lighthouse-check-action@master
-        with:
-          gitHubAccessToken: ${{ secrets.GITHUB_TOKEN }}
-          prCommentEnabled: true
-          prCommentSaveOld: false
-          urls: http://localhost:3001
-
       - name: Checkout main branch into separate folder
         run: |
           git fetch origin main
@@ -46,39 +37,17 @@ jobs:
           cd ..
           sleep 5
 
-      - name: Run Lighthouse for Main branch
-        id: lighthouse_main
+      - name: Create output directory for Lighthouse
+        run: mkdir -p ${{ github.workspace }}/tmp/artifacts
+
+      - name: Run Lighthouse audit for both PR and Main
         uses: foo-software/lighthouse-check-action@master
         with:
+          gitAuthor: ${{ github.actor }}
+          gitBranch: ${{ github.head_ref }}
           gitHubAccessToken: ${{ secrets.GITHUB_TOKEN }}
-          prCommentEnabled: false  # We'll manually combine comments
-          urls: http://localhost:3000
-
-      - name: Post combined PR comment
-        env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          run: |
-            PR_RESULTS='${{ steps.lighthouse_pr.outputs.lighthouseCheckResults }}'
-            MAIN_RESULTS='${{ steps.lighthouse_main.outputs.lighthouseCheckResults }}'
-        
-            COMMENT="### Lighthouse Audit Results
-        
-        🟢 **Main Branch** (port 3000): http://localhost:3000  
-        🔵 **PR Branch** (port 3001): http://localhost:3001
-        
-         <details><summary>View Scores</summary>
-         
-         **Main Branch:**  
-         \`\`\`json
-         $MAIN_RESULTS
-         \`\`\`
-         
-         **PR Branch:**  
-         \`\`\`json
-         $PR_RESULTS
-         \`\`\`
-        
-         </details>"
-        
-            echo "$COMMENT" | gh pr comment ${{ github.event.pull_request.number }} --body -
-        
+          outputDirectory: ${{ github.workspace }}/tmp/artifacts
+          urls: |
+            http://localhost:3000/?branch=main
+            http://localhost:3001/?branch=pr
+          sha: ${{ github.sha }}
