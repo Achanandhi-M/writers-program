@@ -2,7 +2,8 @@ name: Lighthouse Audit for Static Site
 
 on:
   pull_request:
-    types: [opened, reopened, synchronize]
+        branches:
+          - '**'
 
 jobs:
   lighthouse:
