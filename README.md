@@ -55,7 +55,7 @@ We are seeking individuals who meet the following eligibility criteria:
 4. Adhere strictly to the plagiarism policy. 
 5. Understand and comply with the Terms and Conditions of the Keploy Community Writing Program.
 
-### Rewards
+### Reward
 
 Our compensation amounts are measures in <u>USD</u> ($)
 
