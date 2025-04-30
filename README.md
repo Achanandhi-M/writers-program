@@ -90,7 +90,7 @@ Using copyrighted images without permission.
 If unsure about plagiarism concerns, consult with the Keploy content team before submission.
 
 
-## Screenshots
+## Screenshot
 Screenshots can enhance your article by visually representing instructions. Ensure all content in the images is your original work and does not include copyrighted material. For clarity:
 
 - Increase font size for readability.
